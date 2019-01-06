@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>{{Project Name}}</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="main-container">
+        
+        <div id="map">
+            
+        </div>
+        
+        <div id="controls-container">
+            <div id="tube-controls-container" class="IO-container">
+                <div class="flex line">
+                    <p class="text-descriptor-input">city</p>
+                    <select id="cities" class="tube-select">
+                        <option value="london">london</option>
+                        <option value="newyork" disabled>newyork</option>
+                        <option value="tokyo" disabled>tokyo</option>
+                    </select>
+                </div>
+                <div class="flex line">
+                    <p class="text-descriptor-input">line</p>
+                    <select id="lines" class="tube-select">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="flex line">
+                    <p class="text-descriptor-input">station</p>
+                    <select id="stations" class="tube-select" disabled>
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div id="results-container" class="IO-container">
+                <div id="listing-description" class="flex line">
+                    <p id="listing-description-text" class="results-text">description</p><p id="listing-description-value" class="results-value"></p>
+                </div>
+                <div id="listing-address" class="flex line">
+                    <p id="listing-address-text" class="results-text">address</p><p id="listing-address-value" class="results-value"></p>
+                </div>
+                <div id="listing-price" class="flex line">
+                    <p id="listing-price-text" class="results-text">price</p><p id="listing-price-value" class="results-value"></p>
+                </div>
+                <div id="listing-beds" class="flex line">
+                    <p id="listing-beds-text" class="results-text">beds</p><p id="listing-beds-value" class="results-value"></p>
+                </div>
+                <div id="listing-baths" class="flex line">
+                    <p id="listing-baths-text" class="results-text">baths</p><p id="listing-baths-value" class="results-value"></p>
+                </div>
+                <div id="listing-url" class="flex line">
+                    <a id="listing-url-value" class="results-text" target="_blank">url</a>
+                </div>
+            </div>
+            <div id="property-controls-container" class="IO-container">
+                <div id="home-params-property-controls-container">
+                    <div id="beds" class="flex line">
+                        <p class="text-descriptor-input">beds</p>
+                        <select id="min-beds" class="home-params-select min-input bed-input">
+                            <option value="0" selected>studio</option>
+                            <option value="1">one</option>
+                            <option value="2">two</option>
+                            <option value="3">three</option>
+                        </select>
+                        <select id="max-beds" class="home-params-select max-input bed-input">
+                            <option value="0">studio</option>
+                            <option value="1">one</option>
+                            <option value="2">two</option>
+                            <option value="3" selected>three</option>
+                            <option value="">three +</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="price" class="flex line">
+                    <p class="text-descriptor-input">price</p>
+                    <select id="min-price" class="home-params-select min-input price-input">
+                        <option value="">£0</option>
+                        <option value="100000" selected>£100,000</option>
+                        <option value="250000">£250,000</option>
+                        <option value="500000">£500,000</option>
+                        <option value="750000">£750,000</option>
+                        <option value="1000000">£1,000,000</option>
+                        <option value="10000000">£10,000,000</option>
+                    </select>
+                    <select id="max-price" class="home-params-select max-input price-input">
+                        <option value="100000">£100,000</option>
+                        <option value="250000">£250,000</option>
+                        <option value="500000">£500,000</option>
+                        <option value="750000" selected>£750,000</option>
+                        <option value="1000000">£1,000,000</option>
+                        <option value="">no limits</option>
+                    </select>
+                </div>
+                <div id="distance" class="flex line">
+                    <p class="text-descriptor-input">distance</p>
+                    <input type="range" id="distance-input" min="1" max="20" val="8">
+                    <p id="distance-input-value">0.8</p>
+                </div>
+                <div id="keyword" class="flex line">
+                    <p class="text-descriptor-input">keyword</p>
+                    <input type="text" id="keyword-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEzitfRh4g-BFpcT8aoQwpZL-FytTNqqQ&libraries=places"></script>
+    <script src="main.js"></script>
+</body>
+</html>

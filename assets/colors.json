@@ -1,0 +1,36 @@
+[
+    {
+        "lineId": "bakerloo",
+        "color": "#9966333"
+    },{
+        "lineId": "central",
+        "color": "#CC3333"
+    },{
+        "lineId": "circle",
+        "color": "#FFCC00"
+    },{
+        "lineId": "district",
+        "color": "#006633"
+    },{
+        "lineId": "hammersmith-city",
+        "color": "#CC9999"
+    },{
+        "lineId": "jubilee",
+        "color": "#868F98"
+    },{
+        "lineId": "metropolitan",
+        "color": "#660066"
+    },{
+        "lineId": "northern",
+        "color": "#000000"
+    },{
+        "lineId": "piccadilly",
+        "color": "#0019a8"
+    },{
+        "lineId": "victoria",
+        "color": "#0099CC"
+    },{
+        "lineId": "waterloo-city",
+        "color": "#66CCCC"
+    }
+]
