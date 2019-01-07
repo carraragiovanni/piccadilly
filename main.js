@@ -9,63 +9,50 @@ let mapExtras = {
 };
 
 let stylesZoom = [{
-    "elementType": "labels",
-    "stylers": [
-        {
+        "elementType": "labels",
+        "stylers": [{
             "visibility": "off"
-        }
-    ]
-},
-{
-    "featureType": "administrative",
-    "elementType": "geometry",
-    "stylers": [
-        {
+        }]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [{
             "visibility": "off"
-        }
-    ]
-},
-{
-    "featureType": "administrative.land_parcel",
-    "stylers": [
-        {
+        }]
+    },
+    {
+        "featureType": "administrative.land_parcel",
+        "stylers": [{
             "visibility": "off"
-        }
-    ]
-},
-{
-    "featureType": "administrative.neighborhood",
-    "stylers": [
-        {
+        }]
+    },
+    {
+        "featureType": "administrative.neighborhood",
+        "stylers": [{
             "visibility": "off"
-        }
-    ]
-},
-{
-    "featureType": "poi",
-    "stylers": [
-        {
+        }]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [{
             "visibility": "off"
-        }
-    ]
-},
-{
-    "featureType": "road",
-    "elementType": "labels.icon",
-    "stylers": [
-        {
+        }]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [{
             "visibility": "off"
-        }
-    ]
-},
-{
-    "featureType": "transit",
-    "stylers": [
-        {
+        }]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [{
             "visibility": "off"
-        }
-    ]
-}];
+        }]
+    }
+];
 let stylesOut = [{
     "stylers": [{
         "visibility": "off"
@@ -90,6 +77,7 @@ $(document).ready(function () {
     lineListener();
     rangeInputListener();
     stationListener();
+    renderTemplate("listing", null, $("#results-container"));
     homeParamsListener();
     if (window.screen.width < 560) {
         device = "mobile";
@@ -99,7 +87,7 @@ $(document).ready(function () {
 
 function mobileSettings() {
     $("#map").css("width", "100%");
-    
+
     $("#controls-container").css("height", "40%");
     $("#controls-container").css("width", "100%");
     $("#controls-container").css("top", "80%");
@@ -121,44 +109,46 @@ function initMap() {
         zoom: 12,
         styles: stylesOut
     };
-    
+
     map = new google.maps.Map(document.getElementById('map'), options);
-    
+
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap(map);
 }
 
 function getTFLLinesAll(mode) {
     axios.get(`https://api.tfl.gov.uk/Line/Mode/${mode}`).then(function (data) {
-    data.data.forEach(function (line) {
-        $('<option/>', {
-            text: line.name,
-            value: line.id,
-        }).appendTo($("#lines"));
+        data.data.forEach(function (line) {
+            $('<option/>', {
+                text: line.name,
+                value: line.id,
+            }).appendTo($("#lines"));
+        });
     });
-});
 }
 
 function getTFLLineDetails(line) {
     axios.get(`https://api.tfl.gov.uk/Line/${line}/Route/Sequence/all`).then(function (data) {
-    $('#stations').empty();
-    $('<option/>').appendTo($("#stations"));
-    lineCurrent = data.data;
-    data.data.stations.forEach(function (station) {
-        $('<option/>', {
-            text: removeUndergroundStation(station.name),
-            value: station.id,
-        }).appendTo($("#stations"));
+        $('#stations').empty();
+        $('<option/>').appendTo($("#stations"));
+        lineCurrent = data.data;
+        data.data.stations.forEach(function (station) {
+            $('<option/>', {
+                text: removeUndergroundStation(station.name),
+                value: station.id,
+            }).appendTo($("#stations"));
+        });
     });
-});
 }
 
 async function lineListener() {
-    $('#lines').on("input", function() {
+    $('#lines').on("input", function () {
         let line = $(this).find(":selected").val();
-        $.getJSON('assets/colors.json', function (colors) {
+        $.getJSON('app/assets/colors.json', function (colors) {
             if (line) {
-                let color = _.findWhere(colors, {lineId: line}).color;
+                let color = _.findWhere(colors, {
+                    lineId: line
+                }).color;
                 $("#text-descriptor-input-line").css("background-color", color);
                 $("#text-descriptor-input-line").css("color", "white");
                 getTFLLineDetails(line);
@@ -187,19 +177,23 @@ async function lineListener() {
 function stationListener() {
     $('#stations').on("change", function () {
         let station = $(this).find(":selected").val();
-        
-        lat = _.findWhere(lineCurrent.stations, {id: station}).lat;
-        lng = _.findWhere(lineCurrent.stations, {id: station}).lon;
-        
+
+        lat = _.findWhere(lineCurrent.stations, {
+            id: station
+        }).lat;
+        lng = _.findWhere(lineCurrent.stations, {
+            id: station
+        }).lon;
+
         clearOverlays("markersUnderground");
         clearOverlays("circles");
         clearOverlays("markersListings");
-        
+
         zoomMapToSelectedLocation();
-        
+
         addMarker();
         addLayer();
-        
+
         clearResults();
         getListings();
     });
@@ -215,8 +209,8 @@ function zoomMapToSelectedLocation() {
 
 function addMarker() {
     var icon = {
-        url: "assets/underground.svg",
-        scaledSize: new google.maps.Size(25, 25 * (404/500)), // scaled size
+        url: "app/assets/underground.svg",
+        scaledSize: new google.maps.Size(25, 25 * (404 / 500)), // scaled size
         anchor: new google.maps.Point(12.5, (25 * ((404 / 500)) / 2)) // anchor
     };
     var marker = new google.maps.Marker({
@@ -250,7 +244,7 @@ function addLayer() {
 }
 
 function clearOverlays(elements) {
-    mapExtras[elements].forEach(function(element) {
+    mapExtras[elements].forEach(function (element) {
         element.setMap(null);
     })
 }
@@ -288,10 +282,10 @@ function getListings() {
 
 function addListingMarkers(listings) {
     var icon = {
-        url: "assets/listingIcon.svg",
+        url: "app/assets/listingIcon.svg",
     };
-    
-    listings.forEach(function(listing) {
+
+    listings.forEach(function (listing) {
         var marker = new google.maps.Marker({
             position: {
                 lat: listing.latitude,
@@ -305,7 +299,7 @@ function addListingMarkers(listings) {
         });
         mapExtras.markersListings.push(marker);
         google.maps.event.addListener(marker, 'click', function () {
-            marker.setIcon('assets/currentListingIcon.svg');
+            marker.setIcon('app/assets/currentListingIcon.svg');
             marker.opened = true;
             clearDisplayListings();
             displayListingInformation(this.data);
@@ -317,12 +311,13 @@ function addListingMarkers(listings) {
 }
 
 function clearDisplayListings() {
-    $(".results-value").each(function(i, e) {
-        
+    $(".results-value").each(function (i, e) {
+
     })
 };
 
 function displayListingInformation(listing) {
+    renderTemplate("listing", null, "results-container");
     $("#listing-description-value").html(listing.short_description);
     $("#listing-address-value").html(listing.displayable_address);
     $("#listing-price-value").html(listing.price);
@@ -342,10 +337,10 @@ function homeParamsListener() {
         } else if ($(this).hasClass("price-input")) {
             paramType = "price-input";
         }
-        
+
         let min = parseInt($("." + paramType + ".min-input").val());
         let max = parseInt($("." + paramType + ".max-input").val());
-        
+
         if ($(this).hasClass("min-input")) {
             if (min > max) {
                 $(this).addClass("error-input");
@@ -362,8 +357,8 @@ function homeParamsListener() {
                 $(this).removeClass("error-input");
                 inputsValid = true;
             }
-        } 
-        
+        }
+
         if (inputsValid == true) {
             clearOverlays("markersListings");
             clearResults();
@@ -372,17 +367,17 @@ function homeParamsListener() {
             alert("please fix inputs");
         }
     });
-    $("#keyword-input").focusout(function() {
+    $("#keyword-input").focusout(function () {
         if ($("input#keyword-input").val() != "") {
             clearOverlays("markersListings");
             clearResults();
-            getListings();  
+            getListings();
         }
     })
 }
 
 function clearResults() {
-    $(".results-value").each(function(i, e) {
+    $(".results-value").each(function (i, e) {
         e.innerHTML = "";
     });
 }
@@ -407,3 +402,19 @@ function rangeInputListener() {
         }
     });
 }
+
+function renderTemplate(templateName, data, container) {
+    if (!data) {
+        data = {}
+    }
+    container.html("");
+    let t = JST[templateName];
+    let h = t(data);
+    container.html(h);
+}
+
+this["JST"] = this["JST"] || {};
+
+this["JST"]["listing"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<h1>banana</h1>\n\n";
+},"useData":true});
