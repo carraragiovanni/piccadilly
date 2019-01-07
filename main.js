@@ -1,11 +1,76 @@
 let lines = [];
 let lineCurrent;
+let stationCurrent;
 let map;
 let mapExtras = {
     markersUnderground: [],
     markersListings: [],
     circles: [],
 };
+
+let stylesZoom = [{
+    "elementType": "labels",
+    "stylers": [
+        {
+            "visibility": "off"
+        }
+    ]
+},
+{
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+        {
+            "visibility": "off"
+        }
+    ]
+},
+{
+    "featureType": "administrative.land_parcel",
+    "stylers": [
+        {
+            "visibility": "off"
+        }
+    ]
+},
+{
+    "featureType": "administrative.neighborhood",
+    "stylers": [
+        {
+            "visibility": "off"
+        }
+    ]
+},
+{
+    "featureType": "poi",
+    "stylers": [
+        {
+            "visibility": "off"
+        }
+    ]
+},
+{
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+        {
+            "visibility": "off"
+        }
+    ]
+},
+{
+    "featureType": "transit",
+    "stylers": [
+        {
+            "visibility": "off"
+        }
+    ]
+}];
+let stylesOut = [{
+    "stylers": [{
+        "visibility": "off"
+    }]
+}];
 
 let lat;
 let lng;
@@ -34,7 +99,7 @@ $(document).ready(function () {
 
 function mobileSettings() {
     $("#map").css("width", "100%");
-
+    
     $("#controls-container").css("height", "40%");
     $("#controls-container").css("width", "100%");
     $("#controls-container").css("top", "80%");
@@ -42,11 +107,6 @@ function mobileSettings() {
 }
 
 function initMap() {
-    let styles = [{
-            "stylers": [{
-                "visibility": "off"
-            }]
-        }];
     let options = {
         zoomControl: false,
         mapTypeControl: false,
@@ -59,7 +119,7 @@ function initMap() {
             lng: london.lng
         },
         zoom: 12,
-        styles: styles
+        styles: stylesOut
     };
     
     map = new google.maps.Map(document.getElementById('map'), options);
@@ -93,26 +153,44 @@ function getTFLLineDetails(line) {
 });
 }
 
-function lineListener() {
+async function lineListener() {
     $('#lines').on("input", function() {
         let line = $(this).find(":selected").val();
-        if (line) {
-            getTFLLineDetails(line);
-            $("#stations").prop('disabled', false);
-        } else {
-            $("#stations").empty();
-            $("#stations").prop('disabled', true);
-        }
+        $.getJSON('assets/colors.json', function (colors) {
+            if (line) {
+                let color = _.findWhere(colors, {lineId: line}).color;
+                $("#text-descriptor-input-line").css("background-color", color);
+                $("#text-descriptor-input-line").css("color", "white");
+                getTFLLineDetails(line);
+                $("#stations").prop('disabled', false);
+            } else {
+                $("#text-descriptor-input-line").css("background-color", "white");
+                $("#text-descriptor-input-line").css("color", "black");
+                map.setOptions({
+                    styles: stylesOut
+                });
+                map.setZoom(12);
+                map.setCenter({
+                    lat: london.lat,
+                    lng: london.lng
+                });
+                clearOverlays("markersUnderground");
+                clearOverlays("circles");
+                clearOverlays("markersListings");
+                $("#stations").empty();
+                $("#stations").prop('disabled', true);
+            }
+        });
     });
 }
 
 function stationListener() {
     $('#stations').on("change", function () {
         let station = $(this).find(":selected").val();
-
+        
         lat = _.findWhere(lineCurrent.stations, {id: station}).lat;
         lng = _.findWhere(lineCurrent.stations, {id: station}).lon;
-
+        
         clearOverlays("markersUnderground");
         clearOverlays("circles");
         clearOverlays("markersListings");
@@ -121,7 +199,7 @@ function stationListener() {
         
         addMarker();
         addLayer();
-
+        
         clearResults();
         getListings();
     });
@@ -153,6 +231,7 @@ function addMarker() {
 }
 
 function addLayer() {
+    clearOverlays("circles");
     var circle = new google.maps.Circle({
         fillColor: '#ffffff',
         fillOpacity: 0.5,
@@ -164,7 +243,9 @@ function addLayer() {
         },
         radius: ($("#distance-input").val() / 10) * 1609.344
     });
-    clearOverlays("circles");
+    map.setOptions({
+        styles: stylesZoom
+    });
     mapExtras.circles.push(circle);
 }
 
@@ -175,6 +256,7 @@ function clearOverlays(elements) {
 }
 
 function getListings() {
+    $("#map").css("filter", "blur(4px)");
     $.ajax({
         mathod: 'GET',
         url: "https://cors-anywhere.herokuapp.com/http://api.zoopla.co.uk/api/v1/property_listings.json?",
@@ -193,6 +275,7 @@ function getListings() {
             keyword: $("input#keyword-input").val()
         }
     }).done(function (data) {
+        $("#map").css("filter", "");
         if (data.listing.length != 0) {
             addListingMarkers(data.listing);
         } else {
@@ -235,7 +318,7 @@ function addListingMarkers(listings) {
 
 function clearDisplayListings() {
     $(".results-value").each(function(i, e) {
-
+        
     })
 };
 
@@ -280,7 +363,7 @@ function homeParamsListener() {
                 inputsValid = true;
             }
         } 
-
+        
         if (inputsValid == true) {
             clearOverlays("markersListings");
             clearResults();
