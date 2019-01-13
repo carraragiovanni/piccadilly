@@ -1,41 +1,23 @@
-{{!-- <div id="articlesBottom">
-    {{#each articles}}
-    <div class="article row">
-        <div class="col s2 valign-wrapper">
-            <img class="website-icon" src="//logo.clearbit.com/{{extractDomain url}}">
-        </div>
-        <div class="col s10">
-            <a href="{{url}}">{{title}}</a>
-            <p>{{parsePublishetAtDate publishedAt}}</p>
-        </div>
-    </div>
-    <div class="divider"></div>
-    {{/each}}
-</div> --}}
-<h1>banana</h1>
-
-{{!-- {{#each listing}} --}}
-                {{!-- <div id="listing-description" class="flex line">
-                    <p id="listing-description-text" class="results-text">description</p>
-                    <p id="listing-description-value" class="results-value"></p>
-                </div>
-                <div id="listing-address" class="flex line">
-                    <p id="listing-address-text" class="results-text">address</p>
-                    <p id="listing-address-value" class="results-value"></p>
-                </div>
-                <div id="listing-price" class="flex line">
-                    <p id="listing-price-text" class="results-text">price</p>
-                    <p id="listing-price-value" class="results-value"></p>
-                </div>
-                <div id="listing-beds" class="flex line">
-                    <p id="listing-beds-text" class="results-text">beds</p>
-                    <p id="listing-beds-value" class="results-value"></p>
-                </div>
-                <div id="listing-baths" class="flex line">
-                    <p id="listing-baths-text" class="results-text">baths</p>
-                    <p id="listing-baths-value" class="results-value"></p>
-                </div>
-                <div id="listing-url" class="flex line">
-                    <a id="listing-url-value" class="results-text" target="_blank">url</a>
-                </div> --}}
-{{!-- {{/each}} --}}
+<div id="listing-description" class="flex line">
+    <p id="listing-description-text" class="results-text">description</p>
+    <p id="listing-description-value" class="results-value">{{short_description}}</p>
+</div>
+<div id="listing-address" class="flex line">
+    <p id="listing-address-text" class="results-text">address</p>
+    <p id="listing-address-value" class="results-value">{{displayable_address}}</p>
+</div>
+<div id="listing-price" class="flex line">
+    <p id="listing-price-text" class="results-text">price</p>
+    <p id="listing-price-value" class="results-value">{{price}}</p>
+</div>
+<div id="listing-beds" class="flex line">
+    <p id="listing-beds-text" class="results-text">beds</p>
+    <p id="listing-beds-value" class="results-value">{{num_bedrooms}}</p>
+</div>
+<div id="listing-baths" class="flex line">
+    <p id="listing-baths-text" class="results-text">baths</p>
+    <p id="listing-baths-value" class="results-value">{{num_bathrooms}}</p>
+</div>
+<div id="listing-url" class="flex line">
+    <a id="listing-url-value" class="results-text" target="_blank" href={{details_url}}>url</a>
+</div> 
